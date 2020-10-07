@@ -1,6 +1,7 @@
 var inputElement = document.getElementById("document");
 inputElement.addEventListener("change", handleFiles, false);
 var zip = new JSZip();
+var i = 0 ;
 
 function list_results(file, license) {
     var table = document.getElementById("results");
@@ -36,7 +37,8 @@ function handleFiles() {
                              counter += data.byteLength;
                          }, function (data) {
                              var encrypted = SHA1.finalize().toString();
-                             swh_api(file, encrypted, list_results)
+                             swh_api(file, encrypted, list_results);
+                             i++;
                          });
                  });
              }
@@ -111,7 +113,9 @@ function callbackRead_buffered(reader, file, evt, callbackProgress, callbackFina
     }
 }
 
-function swh_api(file, sha1, callback){
+async function swh_api(file, sha1, callback){
+    const sleep = ms => new Promise(resolve => setTimeout(resolve, ms));
+    await sleep(i * 1000);
     const Http = new XMLHttpRequest();
     const url='https://archive.softwareheritage.org/api/1/content/' + sha1;
     Http.open("GET", url);
@@ -127,7 +131,7 @@ function swh_api(file, sha1, callback){
     }
 }
 
-function get_license(url, file, callback) {
+async function get_license(url, file, callback) {
     const Http = new XMLHttpRequest();
     Http.open("GET", url);
     Http.send();
