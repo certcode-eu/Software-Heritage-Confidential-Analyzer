@@ -3,13 +3,21 @@ inputElement.addEventListener("change", handleFiles, false);
 var zip = new JSZip();
 
 function list_results(file, license) {
-    var ul = document.getElementById("results");
-    var li = document.createElement('li');
-    li.setAttribute('class', license ? "found" : "notfound");
-    li.textContent = file.name + " "
-    console.log(li.textContent)
-    li.textContent += license ? license : "";
-    ul.appendChild(li);
+    var table = document.getElementById("results");
+    var tr = document.createElement('tr');
+    tr.setAttribute('class', license ? "found" : "notfound");
+    var td1 = document.createElement('td');
+    td1.textContent = file.name
+    tr.appendChild(td1)
+    var td2 = document.createElement('td');
+    td2.textContent = license ? "Found" : "Not Found";
+    td2.setAttribute('class', license ? license : "")
+    tr.appendChild(td2)
+    var td3 = document.createElement('td');
+    td3.textContent = license ? license : "";
+    td3.setAttribute('class', license ? license : "")
+    tr.appendChild(td3)
+    table.appendChild(tr)
 }
 
 function handleFiles() {

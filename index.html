@@ -1,6 +1,9 @@
 <head>
     <title>Software Heritage Anonymous scanner</title>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/mini.css/3.0.1/mini-default.min.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.14.0/css/all.min.css"
+          integrity="sha512-1PKOgIY59xJ8Co8+NE6FZ+LOAZKjy+KY8iq0G4B3CyeY6wYHN3yt9PW0XpSriVlkMXe40PTKnXrLnZ9+fkDaog=="
+          crossorigin="anonymous"/>
     <link rel="stylesheet" href="swh.css">
 </head>
 <body>
@@ -17,7 +20,7 @@
     <div class="row">
         <div class="col-sm-3"></div>
         <div class="col-sm-6">
-            <h2>Audit your source code files and  discover if they have already been published</h2>
+            <h2>Audit your source code files and discover if they have already been published</h2>
         </div>
 
         <div class="col-sm-3"></div>
@@ -33,7 +36,8 @@
             We will requests the Software Heritage database, without submitting your documents.
 
             <h3>What's Software Heritage ?</h3>
-            It's a initiative supported by <a href="https://en.unesco.org/softwareheritage">Unesco</a> to collect source code.
+            It's a initiative supported by <a href="https://en.unesco.org/softwareheritage">Unesco</a> to collect source
+            code.
             <br>
             Their definition : <i>"We collect and preserve software in source code form, because software embodies our
             technical and scientific knowledge and humanity cannot afford the risk of losing it."</i>
@@ -45,30 +49,52 @@
                 <li>2.5 TB</li>
             </ul>
             <h3>How it works ? </h3>
-            This webpage in your browser, will :
+            Thanks to this page, your browser, will :
             <ul>
                 <li>open you zip file,</li>
-                <li>compute a fingerprint</li>
-                <li>send a request to the Software Heritage server</li>
+                <li>compute a fingerprint for each file</li>
+                <li>submit it to the Software Heritage server</li>
                 <li>display the result</li>
             </ul>
             <h3>Limitations</h3>
-            You're limited to 120 queries or files per hour. If you need more, please <a href="mailto:sebastien.campion@pm.me">contact us</a>
+            You're limited to 120 queries or files per hour. If you need more, please <a
+                href="mailto:sebastien.campion@pm.me">contact us</a>
             <br>
             A last thing, the source code of this application in also open source and available
             <a href="https://github.com/certcode-eu/Software-Heritage-Confidential-Scanner">here</a>
             <br>
             <br>
-            Choose your zip file on your computer : 
-            <input type="file" id="document" class="form-control" accept='application/zip' placeholder="Select file"/>
+            Choose your zip file on your computer :
+            <input type="file" id="document" accept='application/zip' style="display: none">
+            <label for="document" class="button"><i class="fas fa-file-import"></i> Upload file...</label>
         </div>
         <div class="col-sm-2"></div>
     </div>
 
     <div class="row">
+        <div class="col-sm-1"></div>
+        <div class="col-sm-10">
+            <table class="striped">
+                <thead>
+                <tr>
+                    <th>Filename</th>
+                    <th>Status</th>
+                    <th>License</th>
+                </tr>
+                </thead>
+                <tbody id="results"></tbody>
+            </table>
+        </div>
+        <div class="col-sm-1"></div>
+    </div>
+
+    <div class="row">
         <div class="col-sm-3"></div>
         <div class="col-sm-6">
-            <ul id="results"></ul>
+            <hr>
+            <div style="text-align: center; font-size: 10pt; padding: 40px">
+                Copyright © 2020 CertCode
+            </div>
         </div>
         <div class="col-sm-3"></div>
     </div>
