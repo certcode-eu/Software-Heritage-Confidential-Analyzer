@@ -1,14 +1,81 @@
 <head>
     <title>Software Heritage Anonymous scanner</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/mini.css/3.0.1/mini-default.min.css">
     <link rel="stylesheet" href="swh.css">
 </head>
 <body>
+<div class="container">
+    <div class="row">
+        <div class="col-sm-3"></div>
+        <div class="col-sm-6">
+            <a href="https://certcode.eu"><img src="img/certcode.svg" style="width: 200px; padding: 40px"></a>
+            <img src="img/sh.png" style="width: 200px; padding: 20px;">
+        </div>
+        <div class="col-sm-3"></div>
+    </div>
 
-    <input type="file" id="document" class="form-control" accept='application/zip' placeholder="Select file"/>
+    <div class="row">
+        <div class="col-sm-3"></div>
+        <div class="col-sm-6">
+            <h2>Audit your source code files and  discover if they have already been published</h2>
+        </div>
+
+        <div class="col-sm-3"></div>
+    </div>
     <hr>
-    <ul id="results"></ul>
-    <script src="./crypto-js/crypto-js.js"></script>
-    <script src="./jszip.min.js"></script>
-    <script src="./jszip-utils.min.js"></script>
-    <script src="./swh.js"></script>
+
+    <div class="row">
+        <div class="col-sm-2"></div>
+        <div class="col-sm-8">
+            <h3>Goal</h3>
+            Want to know if your software contain open source components without sharing it ?
+            <br>
+            We will requests the Software Heritage database, without submitting your documents.
+
+            <h3>What's Software Heritage ?</h3>
+            It's a initiative supported by <a href="https://en.unesco.org/softwareheritage">Unesco</a> to collect source code.
+            <br>
+            Their definition : <i>"We collect and preserve software in source code form, because software embodies our
+            technical and scientific knowledge and humanity cannot afford the risk of losing it."</i>
+            <br>
+            Some numbers:
+            <ul>
+                <li>140 millions of projects are collected</li>
+                <li>9,1 billions of files</li>
+                <li>2.5 TB</li>
+            </ul>
+            <h3>How it works ? </h3>
+            This webpage in your browser, will :
+            <ul>
+                <li>open you zip file,</li>
+                <li>compute a fingerprint</li>
+                <li>send a request to the Software Heritage server</li>
+                <li>display the result</li>
+            </ul>
+            <h3>Limitations</h3>
+            You're limited to 120 queries or files per hour. If you need more, please <a href="mailto:sebastien.campion@pm.me">contact us</a>
+            <br>
+            A last thing, the source code of this application in also open source and available
+            <a href="https://github.com/certcode-eu/Software-Heritage-Confidential-Scanner">here</a>
+            <br>
+            <br>
+            Choose your zip file on your computer : 
+            <input type="file" id="document" class="form-control" accept='application/zip' placeholder="Select file"/>
+        </div>
+        <div class="col-sm-2"></div>
+    </div>
+
+    <div class="row">
+        <div class="col-sm-3"></div>
+        <div class="col-sm-6">
+            <ul id="results"></ul>
+        </div>
+        <div class="col-sm-3"></div>
+    </div>
+</div>
+
+<script src="./crypto-js/crypto-js.js"></script>
+<script src="./jszip.min.js"></script>
+<script src="./jszip-utils.min.js"></script>
+<script src="./swh.js"></script>
 </body>
