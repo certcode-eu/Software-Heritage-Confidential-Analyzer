@@ -22,6 +22,7 @@ function list_results(file, license) {
 }
 
 function handleFiles() {
+    i = 0 ;
     zip.loadAsync( this.files[0] /* = file blob */)
      .then(function(zip) {
          zip.forEach(function (filename, zipEntry) {
@@ -118,6 +119,7 @@ async function swh_api(file, sha1, callback){
     await sleep(i * 1000);
     const Http = new XMLHttpRequest();
     const url='https://archive.softwareheritage.org/api/1/content/' + sha1;
+    console.log(url);
     Http.open("GET", url);
     Http.send();
     Http.onreadystatechange = (e) => {
