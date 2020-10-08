@@ -123,6 +123,10 @@ async function swh_api(file, sha1, callback){
     Http.open("GET", url);
     Http.send();
     Http.onreadystatechange = (e) => {
+        if (Http.readyState == 4 && Http.status == 429) {
+            alert("Too many requests, you had reached the software heritage server limit." +
+                " If you need a dedicate service without limitation, please contact us https://certcode.eu")
+        }
         if (Http.readyState == 4 && Http.status == 404) {
             callback(file, null)
         }
