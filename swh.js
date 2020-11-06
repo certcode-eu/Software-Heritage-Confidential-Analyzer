@@ -1,35 +1,40 @@
 var inputElement = document.getElementById("document");
 inputElement.addEventListener("change", handleFiles, false);
 var zip = new JSZip();
-var i = 0 ;
 
-function list_results(file, license) {
+function add_result(filename, isknown ) {
     var table = document.getElementById("results");
     var tr = document.createElement('tr');
-    tr.setAttribute('class', license ? "found" : "notfound");
+    tr.setAttribute('class', isknown ? "found" : "notfound");
     var td1 = document.createElement('td');
-    td1.textContent = file.name
-    tr.appendChild(td1)
+    td1.textContent = filename;
+    tr.appendChild(td1);
     var td2 = document.createElement('td');
-    td2.textContent = license ? "Found" : "Not Found";
-    td2.setAttribute('class', license ? license : "")
-    tr.appendChild(td2)
-    var td3 = document.createElement('td');
-    td3.textContent = license ? license : "";
-    td3.setAttribute('class', license ? license : "")
-    tr.appendChild(td3)
+    td2.textContent = isknown ? "Found" : "Not Found";
+    td2.setAttribute('class', isknown ? isknown : "");
+    tr.appendChild(td2);
     table.appendChild(tr)
 }
 
 function handleFiles() {
-    i = 0 ;
-    zip.loadAsync( this.files[0] /* = file blob */)
+    filesha1 = {};
+    nboffiles = 0;
+    zip.loadAsync(this.files[0])
      .then(function(zip) {
          zip.forEach(function (filename, zipEntry) {
-             if (zipEntry.dir == false) {
+             if (zipEntry.dir === false) {
+                 nboffiles++;
+             }
+         });
+         return zip;
+     })
+     .then(function(zip) {
+         zip.forEach(function (filename, zipEntry) {
+             if (zipEntry.dir === false) {
                  zipEntry.async("blob").then(function (content) {
                      var file = new File([content], filename);
                      var SHA1 = CryptoJS.algo.SHA1.create();
+                     SHA1.update(`blob ${content.size}\0`);
                      var counter = 0;
                      loading(file,
                          function (data) {
@@ -38,12 +43,15 @@ function handleFiles() {
                              counter += data.byteLength;
                          }, function (data) {
                              var encrypted = SHA1.finalize().toString();
-                             swh_api(file, encrypted, list_results);
-                             i++;
+                             filesha1[filename] = "swh:1:cnt:" + encrypted;
+                             console.log("file: " + filename + " " +  encrypted )
+                             if ( Object.keys(filesha1).length == nboffiles ) {
+                                 swh_api_known(filesha1);
+                             };
                          });
                  });
              }
-         })
+         });
      }, function() {alert("Not a valid zip file")});
 };
 
@@ -114,43 +122,28 @@ function callbackRead_buffered(reader, file, evt, callbackProgress, callbackFina
     }
 }
 
-async function swh_api(file, sha1, callback){
-    const sleep = ms => new Promise(resolve => setTimeout(resolve, ms));
-    await sleep(i * 1000);
-    const Http = new XMLHttpRequest();
-    const url='https://archive.softwareheritage.org/api/1/content/' + sha1;
-    console.log(url);
-    Http.open("GET", url);
-    Http.send();
+
+async function swh_api_known(filesha1){
+    let Http = new XMLHttpRequest();
+    const url='https://archive.softwareheritage.org/api/1/known/';
+    Http.open("POST", url);
+    Http.setRequestHeader("Content-Type", "application/json");
+    Http.send(JSON.stringify(Object.values(filesha1)));
     Http.onreadystatechange = (e) => {
         if (Http.readyState == 4 && Http.status == 429) {
             alert("Too many requests, you had reached the software heritage server limit." +
                 " If you need a dedicate service without limitation, please contact us https://certcode.eu")
         }
         if (Http.readyState == 4 && Http.status == 404) {
-            callback(file, null)
+            alert("Software Heritage API Error");
         }
         if (Http.readyState == 4 && Http.status == 200 ){
             var response = JSON.parse(Http.responseText);
-            get_license(response.license_url, file, callback)
-        }
-    }
-}
-
-async function get_license(url, file, callback) {
-    const http_request = new XMLHttpRequest();
-    http_request.open("GET", url);
-    http_request.send();
-    http_request.onreadystatechange = (e) => {
-        if (http_request.readyState == 4 && http_request.status == 200 ){
-            JSON.parse(http_request.responseText).facts.forEach(function(item){
-                item.licenses.forEach(function(name){
-                    callback(file, name)
-                });
+            Object.keys(response).forEach(swhid => {
+                var filename = Object.keys(filesha1).find(key => filesha1[key] === swhid);
+                var isknown = response[swhid]['known'];
+                add_result(filename, isknown);
             });
-        }
-        if (http_request.readyState == 4 && http_request.status != 200 ){
-            callback(file, 'unknown')
         }
     }
 }
