@@ -1,8 +1,7 @@
+# Audit your source code files and discover if they have already been published
 
 	https://scan.certcode.eu
 
-
-Audit your source code files and discover if they have already been published
 
 ## Goal
 
@@ -24,7 +23,7 @@ Thanks to this page, your browser, will :
 - submit it to the Software Heritage server
 - display the result
 
-###Limitations
+### Limitations
 
 Software Heritage service is limited to 120 queries or files per hour but also in terms of speed.
 If you need a dedicate service without limitation, please contact us
