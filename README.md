@@ -1,4 +1,4 @@
-# Audit your source code files and discover if they have already been published
+# Audit your source code and find out if they have already been published
 
 	https://scan.certcode.eu
 
