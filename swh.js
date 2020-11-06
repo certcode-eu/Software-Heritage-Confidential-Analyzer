@@ -138,16 +138,19 @@ async function swh_api(file, sha1, callback){
 }
 
 async function get_license(url, file, callback) {
-    const Http = new XMLHttpRequest();
-    Http.open("GET", url);
-    Http.send();
-    Http.onreadystatechange = (e) => {
-        if (Http.readyState == 4 && Http.status == 200 ){
-            JSON.parse(Http.responseText).facts.forEach(function(item){
+    const http_request = new XMLHttpRequest();
+    http_request.open("GET", url);
+    http_request.send();
+    http_request.onreadystatechange = (e) => {
+        if (http_request.readyState == 4 && http_request.status == 200 ){
+            JSON.parse(http_request.responseText).facts.forEach(function(item){
                 item.licenses.forEach(function(name){
                     callback(file, name)
                 });
             });
+        }
+        if (http_request.readyState == 4 && http_request.status != 200 ){
+            callback(file, 'unknown')
         }
     }
 }
